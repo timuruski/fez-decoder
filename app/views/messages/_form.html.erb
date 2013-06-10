@@ -1,0 +1,17 @@
+<%= form_for @message, html: { class: 'pure-form' } do |f| %>
+  <ul>
+    <li id="message_name">
+      <label>Name:</label>
+      <%= f.text_field :name %>
+    </li>
+    <li id="message_coordinates">
+      <label>Coordinates:</label>
+      <%= f.text_field :coordinates %>
+    </li>
+    <li id="message_cipher_text">
+      <label>Cipher text:</label>
+      <%= f.text_area :cipher_text %>
+    </li>
+    <%= f.submit %>
+  </ul>
+<% end -%>

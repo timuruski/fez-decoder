@@ -1,0 +1,10 @@
+<div id="message">
+  <h1><%= @message.name %></h1>
+  <pre><%= @message.cipher_text %></pre>
+</div>
+
+<div>
+  <p><%= link_to "Index", messages_path %></p>
+  <p><%= link_to "Edit", [:edit, @message] %></p>
+  <p><%= link_to "Destroy", @message, method: :delete %></p>
+</div>

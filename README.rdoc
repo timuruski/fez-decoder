@@ -1,0 +1,11 @@
+== README
+
+Fez Decoder
+
+Experimental webapp for entering Fez coded messages so they can be
+analyzed and decoded. This is fairly vanilla right now.
+
+== Dependencies
+
+* Ruby version 2.0.0-p125
+* PostgreSQL 9.2.4

@@ -1,1 +1,4 @@
 --color
+--order random
+-I ./app
+-I ./lib

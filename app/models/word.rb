@@ -7,16 +7,49 @@ class Word
     @character_pairs = build_character_pairs
   end
 
-  attr_reader :character_frequency, :character_pairs, :raw
+  attr_reader :character_frequency, :character_pairs
 
   extend Forwardable
-  def_delegators :raw, :chars,
-                       :length,
-                       :to_s
+  def_delegators :@raw, :chars,
+                        :length,
+                        :to_s
 
+
+  # Public: Returns a hash profiling the characters in a word. For each
+  # character in the hash another hash results. The hash contains:
+  #   f: frequency of letter in a word
+  #   a: frequency of letters coming after
+  #   b: frequency of letters coming before
+  def profile
+    chars = @raw.chars
+    chars.each_with_object(profile_hash).with_index do |(char, h), i|
+      after = '' if i == 0
+      after ||= chars[i - 1]
+
+      before = chars[i + 1]
+      before ||= ''
+
+      char_profile = h[char]
+      char_profile[:f] += 1
+      char_profile[:a][after] += 1
+      char_profile[:b][before] += 1
+    end
+  end
 
   private
 
+
+  def profile_hash
+    Hash.new { |h,k|
+      h[k] = { f: 0,
+               a: sum_hash,
+               b: sum_hash
+             } }
+  end
+
+  def sum_hash
+    Hash.new { |h,k| h[k] = 0 }
+  end
 
   # Internal: Builds a hash of every character in the word and the
   # frequency at which it appears.

@@ -1,4 +1,5 @@
 require 'models/word'
+require 'models/char'
 
 describe Word do
   subject { Word.new('foobar') }
@@ -12,15 +13,13 @@ describe Word do
   end
 
   describe "#profile" do
-    it "can produce one" do
+    it "can produce one as an array" do
       subject = Word.new('foo')
       foo_profile = {
-        'f' => { f: 1,
-                 a: { '' => 1 },
-                 b: { 'o' => 1 } },
-        'o' => { f: 2,
-                 a: { 'f' => 1, 'o' => 1 },
-                 b: { 'o' => 1, '' => 1 } }
+        'f' => Char.new(1, { '' => 1 },
+                           { 'o' => 1 }),
+        'o' => Char.new(2, { 'f' => 1, 'o' => 1 },
+                           { 'o' => 1, '' => 1 })
       }
 
       expect(subject.profile).to eq(foo_profile)

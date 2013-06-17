@@ -1,13 +1,15 @@
 require 'forwardable'
+require 'models/char'
 
 class Word
   def initialize(raw)
     @raw = raw
     @character_frequency = build_character_frequency
     @character_pairs = build_character_pairs
+    @profile = build_profile
   end
 
-  attr_reader :character_frequency, :character_pairs
+  attr_reader :character_frequency, :character_pairs, :profile
 
   extend Forwardable
   def_delegators :@raw, :chars,
@@ -15,36 +17,33 @@ class Word
                         :to_s
 
 
-  # Public: Returns a hash profiling the characters in a word. For each
-  # character in the hash another hash results. The hash contains:
-  #   f: frequency of letter in a word
-  #   a: frequency of letters coming after
-  #   b: frequency of letters coming before
-  def profile
+  private
+
+
+  # Internal
+  def build_profile
     chars = @raw.chars
-    chars.each_with_object(profile_hash).with_index do |(char, h), i|
+    chars.each_with_object(profile_hash).with_index do |(c, h), i|
       after = '' if i == 0
       after ||= chars[i - 1]
 
       before = chars[i + 1]
       before ||= ''
 
-      char_profile = h[char]
-      char_profile[:f] += 1
-      char_profile[:a][after] += 1
-      char_profile[:b][before] += 1
+      h[c] += build_char(after, before)
     end
   end
 
-  private
+  # Internal
+  def build_char(after, before)
+    Char.new(1, { after => 1 }, { before => 1 })
+  end
 
-
+  # Internal
   def profile_hash
     Hash.new { |h,k|
-      h[k] = { f: 0,
-               a: sum_hash,
-               b: sum_hash
-             } }
+      h[k] = Char.new(0, { }, { })
+    }
   end
 
   def sum_hash

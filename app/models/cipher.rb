@@ -1,6 +1,6 @@
 require 'models/word'
 
-class Profiler
+class Cipher
   def initialize(name)
     @name = name
     @words = Hash.new

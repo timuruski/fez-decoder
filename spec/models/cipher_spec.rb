@@ -1,8 +1,8 @@
-require 'models/profiler'
+require 'models/cipher'
 require 'models/char'
 
-describe Profiler do
-  subject { Profiler.new('English') }
+describe Cipher do
+  subject { Cipher.new('English') }
   its(:name) { should eq('English') }
 
   context "given a stream of text" do

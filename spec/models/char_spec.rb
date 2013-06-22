@@ -48,6 +48,14 @@ describe Char do
 
       expect(a == b).to be_false
     end
+  end
 
+  describe "to_ary" do
+    it "can convert into an array" do
+      subject = Char.new(1, { 'a' => 1 }, { 'b' => 1 })
+      ary = [1, { 'a' => 1 }, { 'b' => 1 }]
+
+      expect(subject.to_ary).to eql(ary)
+    end
   end
 end

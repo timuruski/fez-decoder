@@ -25,11 +25,14 @@ class Char
     self.class.new(f, a, b)
   end
 
-
   def ==(other)
     frequency == other.frequency &&
       @after == other.after &&
       @before == other.before
+  end
+
+  def to_ary
+    [frequency, after, before]
   end
 
 

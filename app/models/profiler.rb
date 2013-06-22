@@ -1,21 +1,24 @@
-class Profiler
-  SUM_HASH = ->(h,k) { h[k] = 0 }
+require 'models/word'
 
+class Profiler
   def initialize(name)
     @name = name
     @words = Hash.new
-    @profile = Hash.new { |h,k| h[k] = { f: 0,
-                                         a: Hash.new(&SUM_HASH),
-                                         b: Hash.new(&SUM_HASH) } }
+    @chars = char_hash
   end
 
   attr_reader :name
 
-
+  # Public: Generate a hash containing the profile of all the letters
+  # known and their profiles.
+  #
+  # The frequency of a character needs to be calculated against the
+  # total number of characters seen in order to scale between languages.
   def profile
-    @profile.dup
+    @chars.dup
   end
 
+  # Public: Add a word to the list of words for this language/encoding.
   def learn(text)
     words = text.split(' ').uniq
     words.each do |word|
@@ -23,27 +26,27 @@ class Profiler
     end
   end
 
+
   protected
 
 
+  # Internal
   def learn_word(word)
-    chars = word.chars
-    chars.each_with_index do |char, i|
-      after = '' if i == 0
-      after ||= chars[i - 1]
-
-      before = chars[i + 1]
-      before ||= ''
-
-      learn_char(char, after, before)
+    word_profile = Word.new(word).profile
+    # word_profile.each do |char, (f, a, b)|
+    word_profile.each do |c, char|
+      @chars[c] += char
     end
+
+    @words[word] = word_profile
   end
 
-  def learn_char(char, after, before)
-    char_profile = @profile[char]
-    char_profile[:f] += 1
-    char_profile[:a][after] += 1
-    char_profile[:b][before] += 1
+  # Internal
+  def char_hash
+    Hash.new { |h,k|
+      h[k] = Char.new(0, { }, { })
+    }
   end
+
 
 end
